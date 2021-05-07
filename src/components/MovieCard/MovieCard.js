@@ -4,25 +4,22 @@ export const MovieCard = ({
   portrait,
   secondaryAction: { onAction: onSecondaryAction, content: secondaryLabel },
   primaryAction: { onAction: onPrimaryAction, content: primaryLabel, primary: primaryBtn, disabled: primaryDisabled },
-  movie}) => {
+  movie }) => {
   const UNAVAILABLE_IMAGE = "https://cdn.shopify.com/s/files/1/2506/6936/files/image-unavailable.svg?v=1609864912";
-  const { title, image, year, id } = movie;
+  const { title, image, year, id, isNominated } = movie;
   return (
     <Layout.Section oneThird>
       <MediaCard
         id={id}
         title={title}
         primaryAction={{
-          //content: primaryLabel(id),
-          content: 'Nominate',
+          content: primaryLabel(movie),
           onAction: () => onPrimaryAction(movie),
-          primary: true,
+          primary: primaryBtn(movie),
           disabled: primaryDisabled(movie)
-          //disabled: false
         }}
         secondaryAction={{
-          //content: secondaryLabel(id),
-          content: 'More info',
+          content: 'more',// secondaryLabel(movie),
           onAction: () => onSecondaryAction(movie),
         }}
         description={year}

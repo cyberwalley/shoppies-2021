@@ -138,9 +138,9 @@ function App() {
       <MovieCard key={movie.id} movie={movie} portrait={true} openModal={modal}
         primaryAction = {{
           onAction: handleNominate,
-          disabled:  false //({ isNominated }) => movie.isNominated,
-          //primary: () => true,
-          //content: () => 'Nominate',
+          disabled: ({ isNominated }) => movie.isNominated,
+          primary: () => true,
+          content: ({ isNominated }) => (isNominated ? "Nominated" : "Nominate"),
         }}
         secondaryAction={{
           onAction: () => {
@@ -154,7 +154,7 @@ function App() {
 
   const nominationsMarkup = nominatedMovieItems.map((nominatedMovie) => {
     return (
-      <MovieCard  movie={nominatedMovieItems} portrait={true} openModal={modal}
+      <MovieCard  movie={nominatedMovie} portrait={true} openModal={modal}
       primaryAction = {{
         onAction: handleRemoveNomination,
         disabled: () => false,
