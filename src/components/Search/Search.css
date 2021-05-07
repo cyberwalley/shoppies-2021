@@ -1,0 +1,26 @@
+.Polaris-Layout:nth-child(1) {
+  align-items: center;
+  background-size: cover;
+  background-position: 50% 50%;
+  height:450px;
+  background-color: var(--color-lighter-green);
+  background-image: url('https://cdn.shopify.com/s/files/1/2506/6936/files/shoppies-newbackground.png?v=1608732920');
+}
+
+h1.Polaris-Heading {
+  color: var(--color-white);
+  margin: 0 0 20px;
+  font-size: 3.75em;
+  line-height: 1.12em;
+  margin-bottom: 0.2em;
+  text-shadow: 0 0 4px rgb(0 0 0 / 40%);
+ 
+}
+
+.mega-subtitle {
+  font-size: 1.5em;
+  margin-bottom: 2.0em;
+  line-height: 1.5;
+  text-shadow: 0 0 4px rgb(0 0 0 / 40%);
+  color: var(--color-white);
+}

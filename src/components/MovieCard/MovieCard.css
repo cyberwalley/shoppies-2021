@@ -1,0 +1,16 @@
+.Polaris-MediaCard__Heading h2.Polaris-Heading {
+  font-size: 1.3rem;
+  min-height: 48px;
+}
+
+.Polaris-Card {
+  min-height: 517px;
+}
+
+.Polaris-Layout{
+  justify-content: flex-start;
+}
+
+.Polaris-Layout__Section.Polaris-Layout__Section--oneThird{
+  max-width: 271px;
+}

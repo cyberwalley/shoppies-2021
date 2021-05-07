@@ -1,0 +1,129 @@
+.modal-outer {
+  display: -ms-grid;
+  display: grid;
+  background: rgba(227, 241, 223, 0.7);
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.2s;
+  -o-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  z-index: 519;
+}
+
+.modal-outer img {
+  width: 100%;
+}
+
+.modal-outer.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-inner {
+  position: relative;
+  padding: 2rem;
+  margin: auto;
+  max-width: 700px;
+  border-radius: 5px;
+  background-color: white;
+  -webkit-transition: -webkit-transform 2s;
+  transition: -webkit-transform 2s;
+  -o-transition: transform 2s;
+  transition: transform 2s;
+  transition: transform 2s, -webkit-transform 2s;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
+}
+
+.modal-movie__plot-wrapper{
+  grid-column: 1 / span 2;
+}
+
+.modal-movie__detail-list-item-title{
+  text-transform: uppercase;
+  color: #585c63;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 10px;
+}
+
+.modal-movie__detail-list-item-value{
+  padding-left: 10px;
+  line-height: 1.49;
+}
+
+.modal-movie__plot-heading{
+  text-transform: uppercase;
+  color: #585c63;
+  font-weight: 700;
+  font-size: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.modal-movie__plot-content{
+  line-height: 1.49;
+  margin-bottom: 10px;
+}
+
+.modal-movie__title{
+  padding: 10px;
+}
+
+@media screen and (max-width: 590px) {
+  .modal-movie__plot-heading, .modal-movie__plot-content{
+    padding-left: 10px;
+  }
+}
+
+.modal-inner .close-icon{
+  position: absolute;
+  background-color: white;
+  height: 1.8rem;
+  width: 1.8rem;
+  max-height: 100%;
+  max-width: 100%;
+  cursor: pointer;
+  top: 15px;
+  right: 16px;
+}
+
+@media screen and (max-width: 570px) {
+  .modal-movie__image-wrapper, .modal-movie__title-wrapper, .modal-movie__plot-wrapper {
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+    grid-column: 1 / span 2;
+  }
+
+  .modal-inner {
+    padding: 1rem;
+  }
+
+  .modal-movie__detail-list-item-title{
+    font-size: 14px;
+  }
+
+  .modal-movie__title{
+    font-size: 1.1em;
+  }
+}
+
+ul.modal-movie__detail-list {
+  list-style: none;
+}
