@@ -147,7 +147,7 @@ function App() {
             setMovieId(movie.id); 
             setModal(true);
           },
-          //content: () => 'More info',
+          content: () => 'More info',
         }} />
     );
   });
@@ -159,14 +159,14 @@ function App() {
         onAction: handleRemoveNomination,
         disabled: () => false,
         primary: () => true,
-        label: 'Remove',
+        label: () => 'remove',
       }}
       secondaryAction={{
         onAction: () => {
           setMovieId(nominatedMovie.id); 
           setModal(true);
         },
-        label: 'More info'
+        label: () => 'More info',
       }} />
     );
   });

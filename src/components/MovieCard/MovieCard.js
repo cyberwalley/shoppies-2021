@@ -19,7 +19,7 @@ export const MovieCard = ({
           disabled: primaryDisabled(movie)
         }}
         secondaryAction={{
-          content: 'more',// secondaryLabel(movie),
+          content: secondaryLabel(movie),
           onAction: () => onSecondaryAction(movie),
         }}
         description={year}
