@@ -48,23 +48,14 @@ function App() {
 
   
   const handleNominate = (movie) => {
-    if (nominatedMovieItems <= MAX_NOMINATIONS){
+    if (nominatedMovieItems.length < MAX_NOMINATIONS){
         setNominatedMovieItems((currentNominatedMovieItems) => [
           ...currentNominatedMovieItems,
           movie,
         ]);
     } else {
       setSuccessBanner((value) => (!value))
-      const movies = movieItems.map(({ Title, Poster, Year, imdbID }) => {
-        return {
-          id: imdbID,
-          year: Year,
-          title: Title,
-          image: Poster,
-          isNominated: true
-        };
-      });
-      setMovieItems(movies)
+     
     }
     console.log(nominatedMovieItems, 'NominatedMovieItems')
     console.log(movies, 'movieItems')
@@ -95,7 +86,6 @@ function App() {
           ).then((res) => res.json());
           if (data.Search) {
             console.log(data.Search)
-            setWarningBanner((value) => (!value))
             setMovieItems(data.Search);
           } else {
             setWarningBanner((value) => (!value))
@@ -148,7 +138,7 @@ function App() {
       <MovieCard key={movie.id} movie={movie} portrait={true} openModal={modal}
         primaryAction = {{
           onAction: handleNominate,
-          disabled:  ({ isNominated }) => movie.isNominated,
+          disabled:  false //({ isNominated }) => movie.isNominated,
           //primary: () => true,
           //content: () => 'Nominate',
         }}

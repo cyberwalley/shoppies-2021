@@ -14,3 +14,10 @@
 .Polaris-Layout__Section.Polaris-Layout__Section--oneThird{
   max-width: 271px;
 }
+
+@media screen and (max-width: 590px) {
+  .Polaris-Layout{
+    justify-content: center;
+  }
+
+}

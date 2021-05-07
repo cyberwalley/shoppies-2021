@@ -24,3 +24,10 @@ h1.Polaris-Heading {
   text-shadow: 0 0 4px rgb(0 0 0 / 40%);
   color: var(--color-white);
 }
+
+@media screen and (max-width: 590px) {
+  .Polaris-Page__Content{
+    padding: 20px;
+  }
+
+}

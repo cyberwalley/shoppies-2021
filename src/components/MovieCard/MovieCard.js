@@ -16,7 +16,7 @@ export const MovieCard = ({
           content: 'Nominate',
           onAction: (movie) => onPrimaryAction(movie),
           primary: true,
-          disabled: primaryDisabled(id)
+          disabled: false //primaryDisabled(id)
           //disabled: false
         }}
         secondaryAction={{
