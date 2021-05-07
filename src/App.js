@@ -89,7 +89,7 @@ function App() {
   useEffect(() => {
     async function fetchMoviesData() {
       try {
-        if (searchValue != ""){
+        if (searchValue !== ""){
           const data = await fetch(
             `${movieDataURL}&s=${searchValue}`
           ).then((res) => res.json());
