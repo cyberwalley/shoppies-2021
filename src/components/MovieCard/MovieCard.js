@@ -6,7 +6,7 @@ export const MovieCard = ({
   primaryAction: { onAction: onPrimaryAction, content: primaryLabel, primary: primaryBtn, disabled: primaryDisabled },
   movie }) => {
   const UNAVAILABLE_IMAGE = "https://cdn.shopify.com/s/files/1/2506/6936/files/image-unavailable.svg?v=1609864912";
-  const { title, image, year, id, isNominated } = movie;
+  const { title, image, year, id} = movie;
   return (
     <Layout.Section oneThird>
       <MediaCard

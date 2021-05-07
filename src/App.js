@@ -11,7 +11,7 @@ import {WarningBanner} from './components/Banners/WarningBanner'
 import { useState, useEffect } from "react";
 
 
-import {Page, Card} from '@shopify/polaris';
+import {Page, Card, Spinner} from '@shopify/polaris';
 
 
 
@@ -24,6 +24,7 @@ function App() {
   const [nominatedMovieItems, setNominatedMovieItems] = useState([]);
   const [successBanner, setSuccessBanner] = useState(false);
   const [warningBanner, setWarningBanner] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const MAX_NOMINATIONS = 5;
   
@@ -138,7 +139,7 @@ function App() {
       <MovieCard key={movie.id} movie={movie} portrait={true} openModal={modal}
         primaryAction = {{
           onAction: handleNominate,
-          disabled: ({ isNominated }) => movie.isNominated,
+          disabled: ({ isNominated }) => isNominated || nominatedMovieItems.length === MAX_NOMINATIONS,
           primary: () => true,
           content: ({ isNominated }) => (isNominated ? "Nominated" : "Nominate"),
         }}
@@ -159,14 +160,14 @@ function App() {
         onAction: handleRemoveNomination,
         disabled: () => false,
         primary: () => true,
-        label: () => 'remove',
+        content: () => 'remove',
       }}
       secondaryAction={{
         onAction: () => {
           setMovieId(nominatedMovie.id); 
           setModal(true);
         },
-        label: () => 'More info',
+        content: () => 'More info',
       }} />
     );
   });
