@@ -8,9 +8,12 @@ import {MovieCard} from './components/MovieCard'
 import {Modals} from './components/Modals'
 import {SuccessBanner} from './components/Banners/SuccessBanner'
 import {WarningBanner} from './components/Banners/WarningBanner'
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect} from "react";
 import debounce from 'lodash.debounce';
 import {Page, Card} from '@shopify/polaris';
+import React from 'react'
+
+
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
@@ -127,17 +130,13 @@ function App() {
           .finally(() => {
             setLoading((value)=>(!value))
           })
-          
           if (data.Search) {
-            if (warningBanner === true){
-              setWarningBanner(() => false)
-            }
+            setWarningBanner(() => false)
             setMovieItems(data.Search);
           } else {
             //display warning message if search keyword is invalid or not found
             setWarningBanner((value) => (!value))
           }
-          
         }
       } catch (error) {
         console.log(error);
@@ -223,14 +222,16 @@ function App() {
   // search and debounce
   const updateValue = (newValue) =>{
     setInputValue(newValue);
-    debouncedSave(newValue);
+    debouncedSearch(newValue);
   }
 
-  const debouncedSave = useCallback(
+ /*  const debouncedSave = useCallback(
     debounce((newValue) => setSearchValue(newValue), 1000),
     []
-  );
-
+  ); */
+  const debouncedSearch = React.useMemo(
+    () => debounce(newValue => { setSearchValue(newValue)}, 750), []
+  )
 
   return (
     <div className="site-wrapper">
