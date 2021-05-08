@@ -161,12 +161,12 @@ function App() {
     async function fetchMoviesData() {
       try {
         if (searchValue !== ""){
-          
+          setLoading((value)=>(!value))
           const data = await fetch(
             `${movieDataURL}&s=${searchValue}`
-          ).finally(() => {
+          )/* .finally(() => {
             setLoading((value)=>(!value))
-          })
+          }) */
           .then((res) => res.json())
           .finally(() => {
             setLoading((value)=>(!value))
