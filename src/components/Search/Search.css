@@ -31,3 +31,10 @@ h1.Polaris-Heading {
   }
 
 }
+
+@media screen and (max-width: 590px) {
+  h1.Polaris-Heading {
+    font-size: 2.75em;
+  }
+
+}

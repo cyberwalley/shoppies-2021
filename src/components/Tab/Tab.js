@@ -5,7 +5,7 @@ import {Tabs, Card, Layout, Badge} from '@shopify/polaris';
 import {EmptyStates} from '../EmptyStates'
 
 
-export const Tab = ({ movies, nominatedMovieItems, openModal, movieListMarkup, nominationsMarkup, }) => {
+export const Tab = ({ movies, nominatedMovieItems, movieListMarkup, nominationsMarkup }) => {
   const [selected, setSelected] = useState(0);
 
   //select Tab
@@ -42,15 +42,12 @@ export const Tab = ({ movies, nominatedMovieItems, openModal, movieListMarkup, n
   ];
 
   return (
-    <div>
-    <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
+    <Tabs key={tabs[selected].id} tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
       <Card.Section title={tabs[selected].title}>
       <Layout>
         {tabs[selected].contentMarkUp}
       </Layout>
       </Card.Section>
     </Tabs>
-    
-    </div>
   )
 }

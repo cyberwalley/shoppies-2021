@@ -2,7 +2,7 @@ import './Search.css';
 import {Layout, TextField, Icon, Page, Heading} from '@shopify/polaris';
 import {SearchMinor} from '@shopify/polaris-icons';
 
-export const Search = ({ value, onChange }) => {
+export const Search = ({ value, onChange, handleSubmit }) => {
   return (
     <Layout sectioned={true}>
       <Page>

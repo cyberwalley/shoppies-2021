@@ -16,6 +16,21 @@ import {Page, Card, Spinner} from '@shopify/polaris';
 
 
 function App() {
+  const MAX_NOMINATIONS = 5;
+  /* const retrieveNomination = (MAX_NOMINATIONS) =>{
+    const localStorageItems = JSON.parse(localStorage.getItem('nominations')) || []
+      
+      if (localStorageItems && localStorageItems.length > MAX_NOMINATIONS) {
+        setSuccessBanner((value) => (!value))
+        setNominatedMovieItems(localStorageItems)
+      }else{
+        setNominatedMovieItems(localStorageItems)
+      } 
+      
+  } */
+  
+ 
+
   const [searchValue, setSearchValue] = useState("");
   const [movieItems, setMovieItems] = useState([]);
   const [modalContent, setModalContent] = useState();
@@ -26,12 +41,43 @@ function App() {
   const [warningBanner, setWarningBanner] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const MAX_NOMINATIONS = 5;
-  
-  //const [nominatedMovieItems, setNominatedMovieItems] = useState([]);
-  //const [modal, setModal] = useState(false);
-  //const [modalContent, setModalContent] = useState();
+  // pulls movies from local storage
+  useEffect(() => {
+    const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
+   
+    if (localStorageItems) {
+      setNominatedMovieItems(localStorageItems);
+      setSuccessBanner((value) => (!value))
+      if (localStorageItems.length === MAX_NOMINATIONS){
+        setSuccessBanner((value) => (!value))
+       
+      }else{
+        setNominatedMovieItems(localStorageItems);
+        setSuccessBanner((value) => (!value))
+      }
 
+    }
+}, [setNominatedMovieItems,MAX_NOMINATIONS])
+
+
+// Saves resultsArray to local storage
+ useEffect(() => {
+  localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems))
+
+}, [nominatedMovieItems])
+
+ useEffect(() => {
+  /* if (nominatedMovieItems === MAX_NOMINATIONS){
+    setSuccessBanner((value) => (!value))
+  } */
+  localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems));
+      const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
+      if (localStorageItems.length === MAX_NOMINATIONS){
+        setSuccessBanner((value) => (!value))
+      }
+
+}, [nominatedMovieItems, MAX_NOMINATIONS])
+ 
 
   const handleModalChange = () => setModal(!modal);
 
@@ -49,25 +95,58 @@ function App() {
 
   
   const handleNominate = (movie) => {
-    if (nominatedMovieItems.length < MAX_NOMINATIONS){
+    if (nominatedMovieItems.length === MAX_NOMINATIONS){
+      setSuccessBanner((value) => (!value))
+    }else  {
+      setNominatedMovieItems((currentNominatedMovieItems) => [
+        ...currentNominatedMovieItems,
+        movie,
+      ]);
+      localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems));
+      const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
+      if (localStorageItems.length === MAX_NOMINATIONS){
+        setSuccessBanner((value) => (!value))
+      }
+    }
+    /* if (nominatedMovieItems.length < MAX_NOMINATIONS){
         setNominatedMovieItems((currentNominatedMovieItems) => [
           ...currentNominatedMovieItems,
           movie,
         ]);
+
+      //store in local storage
+      localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems));
+      //const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
+      if (nominatedMovieItems.length === MAX_NOMINATIONS){
+        setSuccessBanner((value) => (!value))
+      }
     } else {
       setSuccessBanner((value) => (!value))
-     
-    }
+    } */
+
     console.log(nominatedMovieItems, 'NominatedMovieItems')
     console.log(movies, 'movieItems')
   }; 
 
+  //filter deleted movie by ID and then pass it to the nominatedMovies array  tp overwrite it
   const handleRemoveNomination = (movie) => {
     setNominatedMovieItems((currentNominatedMovieItems) =>
       currentNominatedMovieItems.filter(
         (nominatedMovie) => nominatedMovie.id !== movie.id
       )
     );
+    //update localStorage
+    localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems))
+      //const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
+      setSuccessBanner((value) => (!value))
+      if (nominatedMovieItems.length < MAX_NOMINATIONS){
+        setSuccessBanner((value) => (!value))
+      }
+    //const localStorageItems = JSON.parse(localStorage.getItem('nominations'))
+
+    /* if (nominatedMovieItems.length < MAX_NOMINATIONS){
+      setSuccessBanner((value) => (!value))
+    } */
   };
 
    const apiSettings = {
@@ -82,19 +161,29 @@ function App() {
     async function fetchMoviesData() {
       try {
         if (searchValue !== ""){
+          
           const data = await fetch(
             `${movieDataURL}&s=${searchValue}`
-          ).then((res) => res.json());
+          ).finally(() => {
+            setLoading((value)=>(!value))
+          })
+          .then((res) => res.json())
+          .finally(() => {
+            setLoading((value)=>(!value))
+          })
+          
           if (data.Search) {
             console.log(data.Search)
+            //setLoading((value)=>(!value))
             setMovieItems(data.Search);
           } else {
             setWarningBanner((value) => (!value))
           }
+          
         }
       } catch (error) {
         console.log(error);
-      }
+      } 
     }
   
     fetchMoviesData();
@@ -153,9 +242,9 @@ function App() {
     );
   });
 
-  const nominationsMarkup = nominatedMovieItems.map((nominatedMovie) => {
+  const nominationsMarkup =  nominatedMovieItems.map((nominatedMovie) => {
     return (
-      <MovieCard  movie={nominatedMovie} portrait={true} openModal={modal}
+      <MovieCard movie={nominatedMovie} portrait={true} openModal={modal}
       primaryAction = {{
         onAction: handleRemoveNomination,
         disabled: () => false,
@@ -176,12 +265,13 @@ function App() {
     <div className="site-wrapper">
       <Header />
       <Main>
-        <Search value={searchValue} onChange={(event) => setSearchValue(event)} />
+        <Search value={searchValue} onChange={(event) => setSearchValue(event)}/>
         <Page>
+          {loading ? <Spinner accessibilityLabel="Spinner example" size="large" /> : null}
           {successBanner ? <SuccessBanner /> : null}
           {warningBanner ? <WarningBanner searchTerm={`Sorry we couldn't find any results matching "${searchValue}"`} /> : null}
           <Card sectioned>
-            <Tab movies={movies} nominatedMovieItems={nominatedMovieItems} nominationsMarkup={nominationsMarkup} movieListMarkup={movieListMarkup}  /*nominatedMovieItems={nominatedMovieItems} openModal={modal}*/ />
+            <Tab key={movies.id} movies={movies} nominatedMovieItems={nominatedMovieItems}  loading={loading} nominationsMarkup={nominationsMarkup} movieListMarkup={movieListMarkup}/>
             <Modals open={modal} onClose={handleModalChange} content={modalContent}  />
           </Card>
         </Page>
