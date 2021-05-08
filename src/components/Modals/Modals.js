@@ -1,7 +1,8 @@
-import {Modal} from '@shopify/polaris';
-import { MoreMovieDetails} from '../MoreMovieDetails';
+import { Modal } from '@shopify/polaris';
+import { MoreMovieDetails } from '../MoreMovieDetails';
+import { Spinners } from '../Spinners';
 
-export const Modals = ({ open, onClose, content}) => {
+export const Modals = ({ open, onClose, content, spinning}) => {
   return (
     <Modal
       open={open}
@@ -15,7 +16,7 @@ export const Modals = ({ open, onClose, content}) => {
       }}
     >
       <Modal.Section>
-        {content ? <MoreMovieDetails movie={content}  /> : null}
+        {spinning ? <Spinners /> : content && <MoreMovieDetails movie={content}  />}
       </Modal.Section>
     </Modal>
   )

@@ -1,6 +1,5 @@
 import React from 'react'
 import {Link, Page, Stack} from "@shopify/polaris";
-import "./Footer.css";
 export const Footer = ({children}) => {
   return (
     <footer className="footer-wrapper_outer">

@@ -3,7 +3,7 @@
   min-height: 48px;
 }
 
-.Polaris-Card {
+.mediaCard_wrapper .Polaris-Layout__Section--oneThird .Polaris-Card {
   min-height: 517px;
 }
 
@@ -11,12 +11,12 @@
   justify-content: flex-start;
 }
 
-.Polaris-Layout__Section.Polaris-Layout__Section--oneThird{
+.mediaCard_wrapper .Polaris-Layout__Section.Polaris-Layout__Section--oneThird{
   max-width: 271px;
 }
 
 @media screen and (max-width: 590px) {
-  .Polaris-Layout{
+  .mediaCard_wrapper .Polaris-Layout__Section--oneThird .Polaris-Layout{
     justify-content: center;
   }
 

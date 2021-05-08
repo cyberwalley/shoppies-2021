@@ -8,29 +8,11 @@ import {MovieCard} from './components/MovieCard'
 import {Modals} from './components/Modals'
 import {SuccessBanner} from './components/Banners/SuccessBanner'
 import {WarningBanner} from './components/Banners/WarningBanner'
-import { useState, useEffect } from "react";
-
-
-import {Page, Card, Spinner} from '@shopify/polaris';
-
-
+import { useState, useEffect, useCallback } from "react";
+import debounce from 'lodash.debounce';
+import {Page, Card} from '@shopify/polaris';
 
 function App() {
-  const MAX_NOMINATIONS = 5;
-  /* const retrieveNomination = (MAX_NOMINATIONS) =>{
-    const localStorageItems = JSON.parse(localStorage.getItem('nominations')) || []
-      
-      if (localStorageItems && localStorageItems.length > MAX_NOMINATIONS) {
-        setSuccessBanner((value) => (!value))
-        setNominatedMovieItems(localStorageItems)
-      }else{
-        setNominatedMovieItems(localStorageItems)
-      } 
-      
-  } */
-  
- 
-
   const [searchValue, setSearchValue] = useState("");
   const [movieItems, setMovieItems] = useState([]);
   const [modalContent, setModalContent] = useState();
@@ -40,6 +22,10 @@ function App() {
   const [successBanner, setSuccessBanner] = useState(false);
   const [warningBanner, setWarningBanner] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [spinning, setSpinning] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  const MAX_NOMINATIONS = 5;
 
   // pulls movies from local storage
   useEffect(() => {
@@ -67,9 +53,6 @@ function App() {
 }, [nominatedMovieItems])
 
  useEffect(() => {
-  /* if (nominatedMovieItems === MAX_NOMINATIONS){
-    setSuccessBanner((value) => (!value))
-  } */
   localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems));
       const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
       if (localStorageItems.length === MAX_NOMINATIONS){
@@ -78,9 +61,6 @@ function App() {
 
 }, [nominatedMovieItems, MAX_NOMINATIONS])
  
-
-  const handleModalChange = () => setModal(!modal);
-
   // map through data recieved to create an object out of it
   const movies = movieItems.map(({ Title, Poster, Year, imdbID }) => {
     return {
@@ -91,9 +71,10 @@ function App() {
       isNominated: nominatedMovieItems.some((movie) => movie.id === imdbID),
     };
   });
-
-
   
+  //Open Modal
+  const handleModalChange = () => setModal(!modal);
+  //nominate movie
   const handleNominate = (movie) => {
     if (nominatedMovieItems.length === MAX_NOMINATIONS){
       setSuccessBanner((value) => (!value))
@@ -108,45 +89,20 @@ function App() {
         setSuccessBanner((value) => (!value))
       }
     }
-    /* if (nominatedMovieItems.length < MAX_NOMINATIONS){
-        setNominatedMovieItems((currentNominatedMovieItems) => [
-          ...currentNominatedMovieItems,
-          movie,
-        ]);
-
-      //store in local storage
-      localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems));
-      //const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
-      if (nominatedMovieItems.length === MAX_NOMINATIONS){
-        setSuccessBanner((value) => (!value))
-      }
-    } else {
-      setSuccessBanner((value) => (!value))
-    } */
-
-    console.log(nominatedMovieItems, 'NominatedMovieItems')
-    console.log(movies, 'movieItems')
   }; 
 
-  //filter deleted movie by ID and then pass it to the nominatedMovies array  tp overwrite it
+  //delete nominee
   const handleRemoveNomination = (movie) => {
     setNominatedMovieItems((currentNominatedMovieItems) =>
       currentNominatedMovieItems.filter(
         (nominatedMovie) => nominatedMovie.id !== movie.id
       )
     );
-    //update localStorage
     localStorage.setItem('nominations', JSON.stringify(nominatedMovieItems))
-      //const localStorageItems = JSON.parse(localStorage.getItem('nominations'));
       setSuccessBanner((value) => (!value))
       if (nominatedMovieItems.length < MAX_NOMINATIONS){
         setSuccessBanner((value) => (!value))
       }
-    //const localStorageItems = JSON.parse(localStorage.getItem('nominations'))
-
-    /* if (nominatedMovieItems.length < MAX_NOMINATIONS){
-      setSuccessBanner((value) => (!value))
-    } */
   };
 
    const apiSettings = {
@@ -156,27 +112,29 @@ function App() {
   };
   
   const movieDataURL = `${apiSettings.apiURL}?type=${apiSettings.contentType}&apikey=${apiSettings.apiKey}`;
+  
   //Get movie data 
   useEffect(() => {
     async function fetchMoviesData() {
       try {
         if (searchValue !== ""){
+          
           setLoading((value)=>(!value))
           const data = await fetch(
             `${movieDataURL}&s=${searchValue}`
-          )/* .finally(() => {
-            setLoading((value)=>(!value))
-          }) */
+          )
           .then((res) => res.json())
           .finally(() => {
             setLoading((value)=>(!value))
           })
           
           if (data.Search) {
-            console.log(data.Search)
-            //setLoading((value)=>(!value))
+            if (warningBanner === true){
+              setWarningBanner(() => false)
+            }
             setMovieItems(data.Search);
           } else {
+            //display warning message if search keyword is invalid or not found
             setWarningBanner((value) => (!value))
           }
           
@@ -194,10 +152,14 @@ function App() {
   useEffect(() => {
     async function fetchMovieData() {
       try {
-        const data = await fetch(`${movieDataURL}&i=${movieId}`).then((res) =>
+        setSpinning((value)=>(!value))
+        const data = await fetch(`${movieDataURL}&i=${movieId}`)
+        .then((res) =>
           res.json()
-        );
-
+        ).finally(() => {
+          setSpinning((value)=>(!value))
+        })
+        
         if (data) {
           const movie = {
             title: data.Title,
@@ -209,7 +171,6 @@ function App() {
             plot: data.Plot,
             released: data.Released,
           };
-          console.log(movie, 'megalooping')
           setModalContent(movie);
         }
       } catch (error) {
@@ -220,10 +181,8 @@ function App() {
     fetchMovieData();
   }, [movieDataURL, movieId]);
 
- 
 
   const movieListMarkup = movies.map((movie) => {
-   
     return (
       <MovieCard key={movie.id} movie={movie} portrait={true} openModal={modal}
         primaryAction = {{
@@ -261,18 +220,29 @@ function App() {
     );
   });
 
+  // search and debounce
+  const updateValue = (newValue) =>{
+    setInputValue(newValue);
+    debouncedSave(newValue);
+  }
+
+  const debouncedSave = useCallback(
+    debounce((newValue) => setSearchValue(newValue), 1000),
+    []
+  );
+
+
   return (
     <div className="site-wrapper">
       <Header />
       <Main>
-        <Search value={searchValue} onChange={(event) => setSearchValue(event)}/>
+        <Search value={inputValue} onChange={(event) => updateValue(event)}/>
         <Page>
-          {loading ? <Spinner accessibilityLabel="Spinner example" size="large" /> : null}
           {successBanner ? <SuccessBanner /> : null}
           {warningBanner ? <WarningBanner searchTerm={`Sorry we couldn't find any results matching "${searchValue}"`} /> : null}
           <Card sectioned>
-            <Tab key={movies.id} movies={movies} nominatedMovieItems={nominatedMovieItems}  loading={loading} nominationsMarkup={nominationsMarkup} movieListMarkup={movieListMarkup}/>
-            <Modals open={modal} onClose={handleModalChange} content={modalContent}  />
+            <Tab key={movies.id} movies={movies} nominatedMovieItems={nominatedMovieItems} loading={loading} nominationsMarkup={nominationsMarkup} movieListMarkup={movieListMarkup}/>
+            <Modals open={modal} onClose={handleModalChange} content={modalContent} spinning={spinning}  />
           </Card>
         </Page>
       </Main>

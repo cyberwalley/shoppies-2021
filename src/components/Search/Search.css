@@ -1,4 +1,4 @@
-.Polaris-Layout:nth-child(1) {
+.hero-wrapper .Polaris-Layout:nth-child(1) {
   align-items: center;
   background-size: cover;
   background-position: 50% 50%;
