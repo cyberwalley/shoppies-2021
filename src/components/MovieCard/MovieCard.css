@@ -16,7 +16,7 @@
 }
 
 @media screen and (max-width: 590px) {
-  .mediaCard_wrapper .Polaris-Layout__Section--oneThird .Polaris-Layout{
+  .Polaris-Layout{
     justify-content: center;
   }
 

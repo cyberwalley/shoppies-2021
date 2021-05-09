@@ -230,7 +230,7 @@ function App() {
     []
   ); */
   const debouncedSearch = React.useMemo(
-    () => debounce(newValue => { setSearchValue(newValue)}, 750), []
+    () => debounce(newValue => { setSearchValue(newValue)}, 850), []
   )
 
   return (
