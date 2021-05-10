@@ -11,6 +11,9 @@ The goal of this project is to do the following:
 ### API
 * [Open Movie Database](http://www.omdbapi.com/)
 
+### Design system and react component
+* [Polaris](https://polaris.shopify.com/)
+
 ## Screenshots
 <details><summary>Expand</summary><br>
 
